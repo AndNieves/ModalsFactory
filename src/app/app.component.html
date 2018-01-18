@@ -16,5 +16,11 @@
   <li>
     <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
   </li>
+  <div>
+    <h2>Lets dynamically create some components!</h2>
+    <button (click)="createHelloWorldComponent()">Create Hello World</button>
+    <button (click)="showModal()">Open modal</button>
+    <app-modal-component [componentData]="componentData"></app-modal-component>
+  </div>
 </ul>
 
