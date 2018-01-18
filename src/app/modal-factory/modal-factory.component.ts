@@ -1,51 +1,47 @@
-import {Component, Input, ViewContainerRef, ViewChild, ReflectiveInjector, ComponentFactoryResolver} from '@angular/core';
+import {
+  Component, Input, ViewContainerRef, ViewChild, ComponentFactoryResolver, ComponentRef,
+  ComponentFactory, OnDestroy, EventEmitter, Output
+} from '@angular/core';
 import {ModalSuccessComponent} from './modal-success/modal-success.component';
-import {current} from 'codelyzer/util/syntaxKind';
+import {ModalBaseComponent} from './modal-base/modal-base.component';
+import {ModalDemotedComponent} from './modal-demoted/modal-demoted.component';
+import {AvailableModals} from './available-modals';
+import {ModalResponse} from './modal-response';
 
 @Component({
   selector: 'app-modal-component',
-  entryComponents: [ModalSuccessComponent],
+  entryComponents: [ModalSuccessComponent, ModalDemotedComponent],
   template: `
-    <div #dynamicComponentContainer></div>
+    <template #dynamicComponentContainer></template>
   `,
 })
-export class ModalFactoryComponent {
-  currentComponent = null;
+export class ModalFactoryComponent implements OnDestroy {
+  @Output() modalResponse: EventEmitter<ModalResponse> = new EventEmitter();
+  componentRef: ComponentRef<ModalBaseComponent>;
+
 
   @ViewChild('dynamicComponentContainer', { read: ViewContainerRef }) modalContainer: ViewContainerRef;
 
-  // component: Class for the component you want to create
-  // inputs: An object with key/value pairs mapped to input name/input value
-  @Input() set componentData(data: {component: any, inputs: any }) {
-    if (!data) {
-      return;
-    }
+  createModal(modalToCreate: AvailableModals) {
     this.modalContainer.clear();
 
-    // Inputs need to be in the following format to be resolved properly
-    const inputProviders = Object.keys(data.inputs).map((inputName) => ({provide: inputName, useValue: data.inputs[inputName]}));
-    const resolvedInputs = ReflectiveInjector.resolve(inputProviders);
+    let factory: ComponentFactory<ModalBaseComponent> = null;
+    if (modalToCreate === AvailableModals.SUCCESS) {
+      factory = this.resolver.resolveComponentFactory(ModalSuccessComponent);
+    }
+    if (modalToCreate === AvailableModals.DEMOTED) {
+      factory = this.resolver.resolveComponentFactory(ModalDemotedComponent);
+    }
+    this.componentRef = this.modalContainer.createComponent(factory);
 
-    // We create an injector out of the data we want to pass down and this components injector
-    const injector = ReflectiveInjector.fromResolvedProviders(resolvedInputs, this.modalContainer.parentInjector);
+    this.componentRef.instance.output.subscribe(event => this.modalResponse.emit(event));
 
-    // We create a factory out of the component we want to create
-    const factory = this.resolver.resolveComponentFactory(data.component);
-
-    // We create the component using the factory and the injector
-    const component = factory.create(injector);
-
-    // We insert the component into the dom container
-    this.modalContainer.insert(component.hostView);
-
-    this.currentComponent = component;
   }
 
-  show() {
-    this.currentComponent.show();
+  ngOnDestroy() {
+    this.componentRef.destroy();
   }
 
   constructor(private resolver: ComponentFactoryResolver) {
-
   }
 }

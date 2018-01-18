@@ -1,7 +1,7 @@
 import {Component, ViewChild} from '@angular/core';
-import { ModalSuccessComponent } from './modal-factory/modal-success/modal-success.component';
 import {ModalFactoryComponent} from './modal-factory/modal-factory.component';
-
+import {AvailableModals} from './modal-factory/available-modals';
+import {ModalResponse} from './modal-factory/modal-response';
 
 @Component({
   selector: 'app-root',
@@ -10,20 +10,17 @@ import {ModalFactoryComponent} from './modal-factory/modal-factory.component';
 })
 export class AppComponent {
   title = 'app';
-  componentData = null;
   @ViewChild(ModalFactoryComponent) modalFactory: ModalFactoryComponent;
 
-  createHelloWorldComponent() {
-    this.componentData = {
-      component: ModalSuccessComponent,
-      inputs: {
-        showNum: 9
-      }
-    };
+  showModalSuccess() {
+    this.modalFactory.createModal(AvailableModals.SUCCESS);
+  }
+  showModalDemoted() {
+    this.modalFactory.createModal(AvailableModals.DEMOTED);
   }
 
-  showModal() {
-    this.modalFactory.show();
+  handleResponse(response: ModalResponse) {
+    console.log(response);
   }
 }
 

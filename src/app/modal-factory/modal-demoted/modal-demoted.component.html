@@ -1,12 +1,12 @@
-<div class="modal fade" bsModal="bsModal" tabindex="-1" role="dialog" aria-hidden="true" #confirmDeactivationModal="bs-modal">
+<div class="modal fade" bsModal="bsModal" tabindex="-1" role="dialog" aria-hidden="true" #demotedModal="bs-modal">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title pull-left"><span class="glyphicon glyphicon-info-sign"></span> <span i18n="Thank you Response|Text thanking the user for submitting feedback@@commonFeedbackResponseTitle">Success!</span></h2>
+        <h2 class="modal-title pull-left"><span class="glyphicon glyphicon-info-sign"></span> <span i18n="Thank you Response|Text thanking the user for submitting feedback@@commonFeedbackResponseTitle">Demoted!</span></h2>
         <button class="close pull-right" (click)="accept()" type="button" i18n-aria-lable="Close|Symbol to close the modal@@commonFeedbackResponseCloseModalSymbol" aria-label="Close"><span aria-hidden="true">&times;</span></button>
       </div>
       <div class="modal-body">
-        <p i18n="Feedback Response Modal Text|Body text of the feedback response modal@@commonFeedbackResponseModalBodyText">This is a success message</p>
+        <p i18n="Feedback Response Modal Text|Body text of the feedback response modal@@commonFeedbackResponseModalBodyText">This is a demoted message</p>
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" (click)="cancel()" type="button" i18n="Close button Text|Text for the close button@@feedback">Ok</button>
